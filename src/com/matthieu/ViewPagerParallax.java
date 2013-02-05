@@ -89,7 +89,7 @@ public class ViewPagerParallax extends ViewPager {
         saved_max_num_pages = max_num_pages;
     }
 
-    int current_position;
+    int current_position, first_position=-1;
     float current_offset;
 
     @Override
@@ -105,10 +105,17 @@ public class ViewPagerParallax extends ViewPager {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        if (first_position == -1) {
+            first_position = getCurrentItem();
+            current_position = first_position;
+            current_offset = 0.0f;
+        }
+
         src.set((int) (((current_position + current_offset) * getWidth() * zoom_level) / 5 ), 0,
                 (int) ((((current_position + current_offset) * getWidth() * zoom_level) / 5)  + (getWidth() * zoom_level)), imageHeight);
 
-        dst.set((int) ((current_position + current_offset) * getWidth()), 0, (int) ((current_position + current_offset) * getWidth()) + canvas.getWidth(), canvas.getHeight());
+        dst.set((int) ((current_position - first_position + current_offset) * getWidth()), 0,
+                (int) ((current_position - first_position + current_offset) * getWidth()) + canvas.getWidth(), canvas.getHeight());
         // still confused why we need to shift also in the destination canvas
 
         canvas.drawBitmap(saved_bitmap, src, dst, null);
