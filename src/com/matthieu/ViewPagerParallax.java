@@ -99,9 +99,6 @@ public class ViewPagerParallax extends ViewPager {
         current_offset = offset;
     }
 
-    int saved_position = -1;
-    float saved_offset;
-
     Rect src = new Rect(), dst = new Rect();
 
     @Override
@@ -115,9 +112,6 @@ public class ViewPagerParallax extends ViewPager {
         // still confused why we need to shift also in the destination canvas
 
         canvas.drawBitmap(saved_bitmap, src, dst, null);
-
-        saved_position = current_position;
-        saved_offset = current_offset;
     }
 
     public void set_max_pages(int num_max_pages) {

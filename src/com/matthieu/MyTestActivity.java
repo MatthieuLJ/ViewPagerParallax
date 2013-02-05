@@ -32,6 +32,19 @@ public class MyTestActivity extends Activity {
                 pager.getAdapter().notifyDataSetChanged();
             }
         });
+
+        if (savedInstanceState!=null) {
+            num_pages = savedInstanceState.getInt("num_pages");
+            pager.setCurrentItem(savedInstanceState.getInt("current_page"), false);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("num_pages", num_pages);
+        final ViewPagerParallax pager = (ViewPagerParallax) findViewById(R.id.pager);
+        outState.putInt("current_page", pager.getCurrentItem());
     }
 
     private class my_adapter extends PagerAdapter {
