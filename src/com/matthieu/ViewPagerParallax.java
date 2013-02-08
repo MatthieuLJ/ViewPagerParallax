@@ -66,7 +66,7 @@ public class ViewPagerParallax extends ViewPager {
             zoom_level = ((float) imageHeight) / getHeight();  // we are always in 'fitY' mode
             is.reset();
 
-            overlap_level = (imageWidth / zoom_level - getWidth() * max_num_pages) / (max_num_pages - 1);
+            overlap_level = zoom_level * Math.min(Math.max(imageWidth / zoom_level - getWidth(),0) / (max_num_pages - 1), getWidth()/2); // how many pixels to shift for each panel
             saved_bitmap = BitmapFactory.decodeStream(is);
 
             is.close();
@@ -81,8 +81,7 @@ public class ViewPagerParallax extends ViewPager {
         background_saved_id = background_id;
         saved_max_num_pages = max_num_pages;
     }
-
-    int current_position=0;
+    int current_position=-1;
     float current_offset=0.0f;
 
     @Override
@@ -98,12 +97,14 @@ public class ViewPagerParallax extends ViewPager {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        if (current_position == -1)
+            current_position=getCurrentItem();
         // maybe we could get the current position from the getScrollX instead?
-        src.set((int) (((current_position + current_offset) * getWidth() + overlap_level * (current_position + current_offset)) * zoom_level), 0,
-                (int) (((current_position + current_offset + 1) * getWidth() + overlap_level * current_position) * zoom_level), imageHeight);
+        src.set((int) (overlap_level * (current_position + current_offset)), 0,
+                (int) (overlap_level * (current_position + current_offset) + (getWidth() * zoom_level)), imageHeight);
 
-        dst.set(getScrollX(), 0,
-                (int) (getScrollX() + canvas.getWidth() - overlap_level * current_offset), canvas.getHeight());
+        dst.set((int) (getScrollX()), 0,
+                (int) (getScrollX() + canvas.getWidth()), canvas.getHeight());
 
         canvas.drawBitmap(saved_bitmap, src, dst, null);
     }
