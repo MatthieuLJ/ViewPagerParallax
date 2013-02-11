@@ -62,6 +62,11 @@ public class ViewPagerParallax extends ViewPager {
 
             imageHeight = options.outHeight;
             imageWidth = options.outWidth;
+            
+            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            int bitmap_size = imageHeight * imageWidth * 4 / 1024;
+            if (bitmap_size > maxMemory / 2)
+            	return;
 
             zoom_level = ((float) imageHeight) / getHeight();  // we are always in 'fitY' mode
             is.reset();
@@ -123,5 +128,11 @@ public class ViewPagerParallax extends ViewPager {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         set_new_background();
+    }
+    
+    @Override
+    public void setCurrentItem(int item) {
+    	super.setCurrentItem(item);
+    	current_position = item;
     }
 }
