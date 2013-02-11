@@ -102,16 +102,18 @@ public class ViewPagerParallax extends ViewPager {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (current_position == -1)
-            current_position=getCurrentItem();
-        // maybe we could get the current position from the getScrollX instead?
-        src.set((int) (overlap_level * (current_position + current_offset)), 0,
-                (int) (overlap_level * (current_position + current_offset) + (getWidth() * zoom_level)), imageHeight);
-
-        dst.set((int) (getScrollX()), 0,
-                (int) (getScrollX() + canvas.getWidth()), canvas.getHeight());
-
-        canvas.drawBitmap(saved_bitmap, src, dst, null);
+        if (saved_bitmap != null) {
+	        if (current_position == -1)
+	            current_position=getCurrentItem();
+	        // maybe we could get the current position from the getScrollX instead?
+	        src.set((int) (overlap_level * (current_position + current_offset)), 0,
+	                (int) (overlap_level * (current_position + current_offset) + (getWidth() * zoom_level)), imageHeight);
+	
+	        dst.set((int) (getScrollX()), 0,
+	                (int) (getScrollX() + canvas.getWidth()), canvas.getHeight());
+	
+	        canvas.drawBitmap(saved_bitmap, src, dst, null);
+        }
     }
 
     public void set_max_pages(int num_max_pages) {
