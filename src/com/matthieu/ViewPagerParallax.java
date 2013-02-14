@@ -6,24 +6,29 @@ import android.graphics.*;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ViewPagerParallax extends ViewPager {
-    int background_id =-1;
-    int background_saved_id =-1;
-    int saved_width=-1, saved_height=-1, saved_max_num_pages =-1;
-    Bitmap saved_bitmap;
+	private int background_id =-1;
+    private int background_saved_id =-1;
+    private int saved_width=-1, saved_height=-1, saved_max_num_pages =-1;
+    private Bitmap saved_bitmap;
+    
+    private int current_position=-1;
+    private float current_offset=0.0f;
+    private Rect src = new Rect(), dst = new Rect();
 
-    int max_num_pages=0;
-    int imageHeight;
-    int imageWidth;
-    float zoom_level;
+    private int max_num_pages=0;
+    private int imageHeight;
+    private int imageWidth;
+    private float zoom_level;
 
-    float overlap_level;
-
-    Rect r = new Rect();
+    private float overlap_level;
+    private boolean pagingEnabled = true;
+    private boolean parallaxEnabled = true;
 
     private final static String TAG="ViewPagerParallax";
 
@@ -86,8 +91,6 @@ public class ViewPagerParallax extends ViewPager {
         background_saved_id = background_id;
         saved_max_num_pages = max_num_pages;
     }
-    int current_position=-1;
-    float current_offset=0.0f;
 
     @Override
     protected void onPageScrolled(int position, float offset, int offsetPixels) {
@@ -96,13 +99,10 @@ public class ViewPagerParallax extends ViewPager {
         current_offset = offset;
     }
 
-    Rect src = new Rect(), dst = new Rect();
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        if (saved_bitmap != null) {
+        if (isParallaxEnabled() && saved_bitmap != null) {
 	        if (current_position == -1)
 	            current_position=getCurrentItem();
 	        // maybe we could get the current position from the getScrollX instead?
@@ -137,4 +137,46 @@ public class ViewPagerParallax extends ViewPager {
     	super.setCurrentItem(item);
     	current_position = item;
     }
+    
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (this.pagingEnabled) {
+            return super.onTouchEvent(event);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (this.pagingEnabled) {
+            return super.onInterceptTouchEvent(event);
+        }
+        return false;
+    }
+    
+    public boolean isPagingEnabled() {
+    	return pagingEnabled;
+    }
+
+
+	/**
+	 * Enables or disables paging for this ViewPagerParallax.
+	 * @param parallaxEnabled
+	 */
+    public void setPagingEnabled(boolean pagingEnabled) {
+        this.pagingEnabled = pagingEnabled;
+    }
+
+	public boolean isParallaxEnabled() {
+		return parallaxEnabled;
+	}
+
+	/**
+	 * Enables or disables parallax effect for this ViewPagerParallax.
+	 * @param parallaxEnabled
+	 */
+	public void setParallaxEnabled(boolean parallaxEnabled) {
+		this.parallaxEnabled = parallaxEnabled;
+	}
 }
