@@ -1,4 +1,4 @@
-﻿package com.matthieu;
+package com.matthieu;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -219,5 +219,13 @@ public class ViewPagerParallax extends ViewPager {
      */
     public void setParallaxEnabled(boolean parallaxEnabled) {
         this.parallaxEnabled = parallaxEnabled;
+    }
+
+    protected void onDetachedFromWindow() {
+        if (saved_bitmap != null) {
+            saved_bitmap.recycle();
+            saved_bitmap = null;
+        }
+        super.onDetachedFromWindow();
     }
 }
