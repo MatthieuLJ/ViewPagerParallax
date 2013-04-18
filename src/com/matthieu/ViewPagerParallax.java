@@ -142,7 +142,7 @@ public class ViewPagerParallax extends ViewPager {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (!insufficientMemory) {
+        if (!insufficientMemory && parallaxEnabled) {
             if (current_position == -1)
                 current_position=getCurrentItem();
             // maybe we could get the current position from the getScrollX instead?
@@ -169,7 +169,7 @@ public class ViewPagerParallax extends ViewPager {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        if (!insufficientMemory)
+        if (!insufficientMemory && parallaxEnabled)
             set_new_background();
     }
 
