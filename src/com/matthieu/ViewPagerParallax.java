@@ -191,6 +191,10 @@ public class ViewPagerParallax extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+    	// fix for https://github.com/JakeWharton/Android-ViewPagerIndicator/issues/72
+        if(isFakeDragging()) {
+        	return false;
+        }
         if (this.pagingEnabled) {
             return super.onInterceptTouchEvent(event);
         }
